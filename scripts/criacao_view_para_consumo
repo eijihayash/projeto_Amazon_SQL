@@ -1,0 +1,22 @@
+CREATE OR REPLACE VIEW amazon_db.vw_amazon_products_analysis AS
+SELECT
+	silver.title AS product_title,
+    silver.rating AS product_rating,
+    silver.number_of_reviews AS total_reviews,
+    silver.bought_in_last_month AS purchased_last_month,
+    silver.current_discounted_price  AS discounted_price,
+	silver.listed_price AS original_price,
+	silver.is_best_seller AS is_best_seller,
+	silver.is_sponsored AS is_sponsored,
+	silver.is_couponed AS has_cupon,
+	silver.buy_box_availability AS buy_box_availability,
+	silver.delivery_details AS delivery_date,
+	silver.sustainability_badges AS sustainability_tags,
+	silver.image_url AS product_image_url,
+	silver.product_url AS product_page_url,
+	silver.collected_at AS data_collected_at,
+    amazon.product_category AS product_category,
+    ROUND((silver.listed_price - silver.current_discounted_price)/silver.listed_price * 100, 2) AS discout_percentage
+    FROM amazon_db.silver_amazon_products AS silver
+LEFT JOIN amazon_db.amazon_products_sales AS amazon
+ON silver.title = amazon.product_title;
